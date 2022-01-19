@@ -1,0 +1,47 @@
+# FinalProject_db_AmandaQuach file 
+def get_preferences(nameDb, languageDb, autoSaveDb):
+    try:
+        file = open("preferences.txt")
+        name=file.readline().strip()
+        language=file.readline().strip()
+        autoSave=file.readline().strip()
+        nameTxt=name.replace("name|", "")
+        languageTxt=language.replace("language|", "")
+        autoSaveTxt=autoSave.replace("autosave|", "")
+        nameDb.set(nameTxt)
+        languageDb.set(languageTxt)
+        autoSaveDb.set(autoSaveTxt)
+            
+    except FileNotFoundError:
+        with open ("preferences.txt", "w") as outfile:
+            name="name|"
+            language="language|English"
+            autoSave="autosave|5"
+            nameTxt=name.replace("name|", "")
+            languageTxt=language.replace("language|", "")
+            autoSaveTxt=autoSave.replace("autosave|", "")
+            nameDb.set(nameTxt)
+            languageDb.set(languageTxt)
+            autoSaveDb.set(autoSaveTxt)
+            
+def save_file(nameDb, languageDb, autoSaveDb, nameError, languageError, autoSaveError):
+    inputError = False
+    if len(nameDb.get())==0:
+        nameError.set ("Required")
+        inputError = True
+    if len(languageDb.get())==0:
+        languageError.set("Required")
+        inputError = True
+    try:
+        autoMin = int(autoSaveDb.get())
+    except:
+        autoSaveError.set("Must be valid integer.")
+        inputError = True
+    if not inputError:
+        file = open("preferences.txt", "w")
+        file.write("name|" + nameDb.get() + "\n")
+        file.write("language|" + languageDb.get() + "\n")
+        file.write("autosave|" + autoSaveDb.get() + "\n")
+        file.close()
+        exit(0)
+            
